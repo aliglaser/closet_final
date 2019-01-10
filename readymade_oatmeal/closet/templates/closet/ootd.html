@@ -1,0 +1,132 @@
+{% extends "layout.html" %}
+
+{% load static from staticfiles %}
+{% block static %}<link rel="stylesheet" href="{% static 'closet/css/ootd.css' %}">{% endblock %}
+
+
+{% block title %}ootd|{{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div id="outerContainer">
+    <div id="ootdcontainer">
+        <div class="clothes">
+            <div class="w3-content w3-display-container">
+                {% for piece in clothes %}
+                    <img class="mySlides" src='{{ piece.photo.file.url }}'/ style="width:90%">
+                {% endfor %}
+        
+              <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+              <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+            </div>
+        </div>
+        <div class="clothes">
+            <div class="left"></div>
+            <div class="clothes_container"></div>
+            <div class="right"></div>
+        </div>
+    </div>
+</div>
+
+<input type="submit" value="Save">
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+    var container = document.querySelector("#ootdcontainer");
+    var activeItem = null;
+
+    var active = false;
+
+    container.addEventListener("touchstart", dragStart, false);
+    container.addEventListener("touchend", dragEnd, false);
+    container.addEventListener("touchmove", drag, false);
+
+    container.addEventListener("mousedown", dragStart, false);
+    container.addEventListener("mouseup", dragEnd, false);
+    container.addEventListener("mousemove", drag, false);
+
+    function dragStart(e) {
+
+      if (e.target !== e.currentTarget && e.target.className == 'clothes') {
+        active = true;
+
+        // this is the item we are interacting with
+        activeItem = e.target;
+
+        if (activeItem !== null) {
+          if (!activeItem.xOffset) {
+            activeItem.xOffset = 0;
+          }
+
+          if (!activeItem.yOffset) {
+            activeItem.yOffset = 0;
+          }
+
+          if (e.type === "touchstart") {
+            activeItem.initialX = e.touches[0].clientX - activeItem.xOffset;
+            activeItem.initialY = e.touches[0].clientY - activeItem.yOffset;
+          } else {
+            console.log("doing something!");
+            activeItem.initialX = e.clientX - activeItem.xOffset;
+            activeItem.initialY = e.clientY - activeItem.yOffset;
+          }
+        }
+      }
+    }
+
+    function dragEnd(e) {
+      if (activeItem !== null) {
+        activeItem.initialX = activeItem.currentX;
+        activeItem.initialY = activeItem.currentY;
+      }
+
+      active = false;
+      activeItem = null;
+    }
+
+    function drag(e) {
+      if (active) {
+        if (e.type === "touchmove") {
+          e.preventDefault();
+
+          activeItem.currentX = e.touches[0].clientX - activeItem.initialX;
+          activeItem.currentY = e.touches[0].clientY - activeItem.initialY;
+        } else {
+          activeItem.currentX = e.clientX - activeItem.initialX;
+          activeItem.currentY = e.clientY - activeItem.initialY;
+        }
+
+        activeItem.xOffset = activeItem.currentX;
+        activeItem.yOffset = activeItem.currentY;
+
+        setTranslate(activeItem.currentX, activeItem.currentY, activeItem);
+      }
+    }
+
+    function setTranslate(xPos, yPos, el) {
+      el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+    }
+   
+</script>
+<script>
+var slideIndex = 1;
+showDivs(slideIndex);
+
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length}
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  x[slideIndex-1].style.display = "block";  
+}
+</script>
+{% endblock %}

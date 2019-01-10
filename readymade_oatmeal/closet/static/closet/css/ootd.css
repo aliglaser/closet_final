@@ -1,0 +1,38 @@
+#ootdcontainer {
+    width: 90%;
+    height: 900px;
+    background-color: lightblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 7px;
+    border: 0.7px solid lightgray;
+    touch-action: none;
+}
+
+.mySlides {display:none;}
+
+.clothes {
+    width: 900px;
+    height: 600px;
+    background-color: white;
+    border: 0.7px solid black;
+}
+
+.item {
+    border-radius: 10%;
+    touch-action: none;
+    user-select: none;
+    position: relative;
+}
+
+
+
+.item:active {
+    opacity: .75;
+}
+
+.item:hover {
+    cursor: pointer;
+}

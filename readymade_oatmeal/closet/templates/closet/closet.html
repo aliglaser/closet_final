@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% load static from staticfiles %}
+{% block static %}<link rel="stylesheet" href="{% static 'closet/css/basic.css' %}">{% endblock %}
+{% block title %}closet|{{ block.super }}{% endblock %}
+
+  
+{% block content %} 
+<div class="sidenavigation">
+	<button class="accordion">Category</button>
+	<div class="panel">
+		{{ form.category }}
+	</div>
+	<button class="accordion">Season</button>
+	<div class="panel">
+		{{ form.season }}
+	</div>
+	<button class="accordion">Color</button>
+	<div class="panel">
+		{{ form.color }}
+	</div>
+	<button class="accordion">Pattern</button>
+	<div class="panel">
+		{{ form.pattern }}
+	</div>
+</div>
+<div>
+	<p>dkdk3s</p>
+	<input type="search" name="q"></p>
+	<input type="button" name="search" value="search">
+	{% for clothes in closet %}
+		<p><a href="{% url 'closet:detail' pk=clothes.pk %}"><img src='{{ clothes.photo.file.url }}'/ width="300" height="400"></a></p>
+	{% endfor %}
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+	jQuery.ajaxSettings.traditional = true;
+	var cg_checked = [];
+	var ss_checked = [];
+	var co_checked = [];
+	var pt_checked = [];
+	$("#id_category input:checkbox").change(function () {
+ 		if(this.checked){
+ 			cg_checked.push(this.value)
+ 			console.log(cg_checked) 			
+ 		}
+
+ 		if(!(this.checked)){
+ 			cg_checked.splice(cg_checked.indexOf(this.value),1); 
+ 			console.log(cg_checked)
+ 		}
+ 		$.ajax({
+	 		url: '{% url "closet:closet2" %}',
+	 		data: {
+	 			'cg_checked': cg_checked, 'ss_checked':ss_checked, 'co_checked':co_checked, 'pt_checked':pt_checked
+	 		},
+	 		dataType: 'json',
+	 		success: function (data) {
+				console.log("succccs")
+	 		}
+ 		});
+ 	});
+ 	$("#id_season input:checkbox").change(function () {
+ 		if(this.checked){
+ 			ss_checked.push(this.value)
+ 			console.log(ss_checked)
+ 		}
+ 		if(!(this.checked)){
+ 			ss_checked.splice(ss_checked.indexOf(this.value),1); 
+ 			console.log(ss_checked)
+ 		}
+ 		$.ajax({
+	 		url: '{% url "closet:closet2" %}',
+	 		data: {
+	 			'cg_checked': cg_checked, 'ss_checked':ss_checked, 'co_checked':co_checked, 'pt_checked':pt_checked
+	 		},
+	 		dataType: 'json',
+	 		success: function (data) {
+				console.log("succccs")
+	 		}
+ 		});
+ 	});
+ 	$("#id_color input:checkbox").change(function () {
+ 		if(this.checked){
+ 			co_checked.push(this.value)
+ 			console.log(co_checked)
+ 		}
+ 		if(!(this.checked)){
+ 			co_checked.splice(co_checked.indexOf(this.value),1); 
+ 			console.log(co_checked)
+ 		}
+ 		$.ajax({
+	 		url: '{% url "closet:closet2" %}',
+	 		data: {
+	 			'cg_checked': cg_checked, 'ss_checked':ss_checked, 'co_checked':co_checked, 'pt_checked':pt_checked
+	 		},
+	 		dataType: 'json',
+	 		success: function (data) {
+				console.log("succccs")
+	 		}
+ 		});
+ 	});
+ 	$("#id_pattern input:checkbox").change(function () {
+ 		if(this.checked){
+ 			pt_checked.push(this.value)
+ 			console.log(pt_checked)
+ 		}
+ 		if(!(this.checked)){
+ 			pt_checked.splice(pt_checked.indexOf(this.value),1); 
+ 			console.log(pt_checked)
+ 		}
+ 		$.ajax({
+	 		url: '{% url "closet:closet2" %}',
+	 		data: {
+	 			'cg_checked': cg_checked, 'ss_checked':ss_checked, 'co_checked':co_checked, 'pt_checked':pt_checked
+	 		},
+	 		dataType: 'json',
+	 		success: function (data) {
+				console.log("succccs")
+	 		}
+ 		});
+ 	});
+</script>
+<script src="{% static 'closet/js/closet.js' %}"></script>
+{% endblock %}

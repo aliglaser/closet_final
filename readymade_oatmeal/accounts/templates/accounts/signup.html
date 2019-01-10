@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}SIGN UP | {{ block.super }}{% endblock %}
+
+{% block content%}
+<div>
+	<h1>SIGN UP PAGE</h1>
+	<form method="POST">	
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="SIGN UP">
+	</form>
+</div>
+{% endblock %}

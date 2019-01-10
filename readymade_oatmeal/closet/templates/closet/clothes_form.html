@@ -1,0 +1,110 @@
+{% extends 'layout.html' %}
+
+{% load static %}
+
+
+{% block title %}Add Your Clothes|{{ block.super }}{% endblock %}
+
+{% block content %}
+<div>
+	<form method="POST" enctype="multipart/form-data" id="ultimate_form">
+		{% csrf_token %}
+		{{ formset.management_form }}
+		<div id="form_set" class="add_more" style="visibility:hidden">
+	    {% for form in formset.forms %}
+	        <table class='no_error'>
+	            {{ form.as_table }}
+	        </table>
+	    {% endfor %}
+		</div>
+		<hr>
+		<input type="submit" value="SUBMIT">
+	</form>
+</div>
+
+<div id="empty_form" style="display:none">
+    <table class='no_error'>
+        {{ formset.empty_form.as_table }}
+    </table>
+</div>
+
+<div style="margin-bottom: 20px;">
+    <button type="button" class="btn btn-primary js-upload-photos">
+      <span class="glyphicon glyphicon-cloud-upload"></span> Upload photos
+    </button>
+    <input id="fileupload" type="file" name="file" multiple
+           style="display: none;"
+           data-url="{% url 'closet:basic_upload' %}"
+           data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+</div>
+
+  <table id="gallery" class="table table-bordered" style="display:none">
+    <thead>
+      <tr>
+        <th>Photo</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for photo in photos %}
+        <tr>
+          <!--<td><a href="{{ photo.image.url }}"><img src="{{ photo.image.url }}" /></a></td>-->
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{% static 'js/jquery-file-upload/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'js/jquery-file-upload/jquery.fileupload.js' %}"></script>
+<script>
+var img_section;
+var url_list = [];
+var id_list = [];
+var photo_ids = [];
+var num = 0
+
+	$('.js-upload-photos').click(function(){
+		$("#fileupload").click();
+		$("#fileupload").on('change', function(e){
+			var file_len = e.target.files.length;
+			$('#form_set').attr("style", "visibility: block")
+			photo_ids.push($("#id_form-0-photoid"));
+			for(let i=0; i<file_len-1; i++){
+				var form_idx = $('#id_form-TOTAL_FORMS').val();
+				$('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+				$('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+				photo_ids.push($("#id_form-"+(i+1)+"-photoid"));
+				console.log("kjk3")
+			}
+			img_section = $(".no_error tbody");
+		});
+		$("#fileupload").fileupload({
+			dataType: 'json',
+			done: function (e, data) {
+				if (data.result.is_valid) {
+					url_list.push(data.result.url);
+					id_list.push(data.result.photo_id);
+					photo_ids[num].val(data.result.photo_id);
+					console.log(photo_ids[num].val())
+					num++;
+					var index = url_list.length-1; 
+					img_section.eq(index).prepend("<tr><td><a href='" + url_list[index] + "'><img src='"+ url_list[index] +"'></a></td></tr>")
+					img_section.eq(index).append("<button>DELETE</button>")
+					$('.js-upload-photos').attr("style", "visibility: none");
+					}
+				}
+		});
+	});
+
+
+</script>
+<!--
+<script src="{% static 'closet/js/basic-upload.js' %}"></script>
+-->
+{% endblock %}
+
+
