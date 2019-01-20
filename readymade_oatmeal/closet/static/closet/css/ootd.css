@@ -1,23 +1,24 @@
 #ootdcontainer {
-    width: 90%;
-    height: 900px;
-    background-color: lightblue;
-    display: flex;
+    width: 100%;
+    height: 1200px;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    border-radius: 7px;
-    border: 0.7px solid lightgray;
-    touch-action: none;
+    display: flex;              /* establish flex container */
+    flex-direction: column;     /* stack flex items vertically */
+    justify-content: center;    /* center items vertically, in this case */
+    align-items: center;        /* center items horizontally, in this case */
 }
 
 .mySlides {display:none;}
 
 .clothes {
-    width: 900px;
-    height: 600px;
-    background-color: white;
-    border: 0.7px solid black;
+    border:0.2px solid;
+    text-align: center;
+    margin-top:10px;
+    top:50%; left:50%;
+    width:800px; 
+    height:800px; 
+    padding: 10px;
 }
 
 .item {

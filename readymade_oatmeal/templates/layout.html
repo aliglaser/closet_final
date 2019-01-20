@@ -1,4 +1,4 @@
-{% load static from staticfiles %}
+ {% load static from staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,7 +18,15 @@
   <body>
     <div class="wrapper">
       <div class="header">
+        <div><a href="{% url 'home' %}"><img alt="ReadyMADE" src=""></a></div>
+        <div>
+          <ul>
+            <li><a href="{% url 'accounts:login' %}">Sign In</a></li>
+            <li><a href="{% url 'accounts:signup' %}">Register</a></li>
+          </ul>
+        </div>
       </div>
+
       <div class="middle">
 
         <div class="container">
@@ -30,7 +38,7 @@
 
     </div><!-- .wrapper -->
     <footer class="footer">
-      <strong>Footer:</strong> Mus elit Morbi mus enim lacus at quis Nam eget morbi. Et semper urna urna non at cursus dolor vestibulum neque enim. Tellus interdum at laoreet laoreet lacinia lacinia sed Quisque justo quis. Hendrerit scelerisque lorem elit orci tempor tincidunt enim Phasellus dignissim tincidunt. Nunc vel et Sed nisl Vestibulum odio montes Aliquam volutpat pellentesque. Ut pede sagittis et quis nunc gravida porttitor ligula.
+
     </footer><!-- .footer -->
     
     <script src="{% static 'js/jquery-3.3.1.js' %}"></script>
