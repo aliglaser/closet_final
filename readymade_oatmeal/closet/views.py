@@ -1,6 +1,7 @@
 import time
 from django.views import View, generic
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.http import JsonResponse
 from django.db.models import Q
@@ -12,7 +13,7 @@ from . import forms
 from django.forms import modelformset_factory
 # Create your views here.
 
-
+'''
 class ClothesRegisterView(generic.CreateView):
 	form_class = forms.ClothesForm
 	template_name = 'closet/clothes_form.html'
@@ -24,9 +25,14 @@ class ClothesRegisterView(generic.CreateView):
 		self.object.title = self.object.color + self.object.category
 		self.object.save()
 		return HttpResponseRedirect(self.get_success_url())
+'''
 
 
+@login_required(login_url='/accounts/login/')
 def clothes_reg(request):
+	'''
+		Clothing registration page. Need login to hop in
+	'''
 	form = forms.ClothesForm()
 	formset = forms.Clothes_Formset(queryset=models.Clothes.objects.none())
 	if request.method == 'POST':
@@ -41,11 +47,17 @@ def clothes_reg(request):
 	return render(request, 'closet/clothes_form.html', {'formset':formset})
 
 
+@login_required(login_url='/accounts/login/')
 def closet(request):
+	'''
+		Closet main first page for registered clothes for each user...
+	'''
 	form = forms.ClothesForm()
+	closet = models.Clothes.objects.filter(user=request.user)
 	return render(request, "closet/closet.html", {'form':form, 'closet':closet})
 
 
+@login_required(login_url='/accounts/login/')
 def closet2(request):
 	cg_list = request.GET.getlist('cg_checked', None)
 	ss_list = request.GET.getlist('ss_checked', None)
@@ -55,16 +67,14 @@ def closet2(request):
 	q_objects2 = Q()
 	q_objects3 = Q()
 	q_objects4 = Q()
-	print(cg_list)
+
 	if cg_list:
 		for item in cg_list:
 			q_objects1.add(Q(category__icontains=item), Q.OR)
 		closet2 = models.Clothes.objects.filter(q_objects1)
-		print(cg_list)
 	if ss_list:
 		for item in ss_list:
 			q_objects2.add(Q(season__icontains=item), Q.OR)
-		print(ss_list)	
 	if co_list:
 		for item in co_list:
 			q_objects3.add(Q(color__icontains=item), Q.OR)
@@ -73,12 +83,11 @@ def closet2(request):
 			q_objects4.add(Q(pattern__icontains=item), Q.OR)
 
 	closet = models.Clothes.objects.filter(q_objects1).filter(q_objects2).filter(q_objects3).filter(q_objects4)
-		
-	values_list = list(closet.values())
-	data = {
-            "values_list" : values_list
-    }
-	return JsonResponse(data)
+	data = closet.values('id', 'photo')
+	#data = serializers.serialize('json', closet)	
+	#print(data)
+	response = json.dumps(list(data))
+	return JsonResponse(response, safe=False)
 
 
 def ootdview(request):
@@ -122,8 +131,11 @@ class BasicUploadView(View):
 
 
 def clear_database(request):
-    for photo in Photo.objects.all():
-        photo.file.delete()
-        photo.delete()
-    return redirect(request.POST.get('next'))
+	'''
+		Delete the data that users don't want anymore
+	'''
+	for photo in Photo.objects.all():
+		photo.file.delete()
+		photo.delete()
+	return redirect(request.POST.get('next'))
 

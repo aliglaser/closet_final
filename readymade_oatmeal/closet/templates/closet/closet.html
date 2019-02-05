@@ -25,12 +25,15 @@
 	</div>
 </div>
 <div>
-	<p>dkdk3s</p>
 	<input type="search" name="q"></p>
 	<input type="button" name="search" value="search">
 	{% for clothes in closet %}
 		<p><a href="{% url 'closet:detail' pk=clothes.pk %}"><img src='{{ clothes.photo.file.url }}'/ width="300" height="400"></a></p>
 	{% endfor %}
+
+</div>
+<div id="results">
+	
 </div>
 
 {% endblock %}
@@ -59,8 +62,18 @@
 	 			'cg_checked': cg_checked, 'ss_checked':ss_checked, 'co_checked':co_checked, 'pt_checked':pt_checked
 	 		},
 	 		dataType: 'json',
-	 		success: function (data) {
-				console.log("succccs")
+	 		success: function (response) {
+	 			var html = "<ul>"
+	 			var json_data = JSON.parse(response);
+	 			for (var i = 0; i < json_data.length; i++) {
+				    obj = json_data[i];
+				    console.log(obj)
+				    html += "<img src=";
+				    html += obj["photo"].file.url
+				    html += "/>";
+			  	}
+				html += "</ul>";
+				$("#results").html(html);
 	 		}
  		});
  	});
@@ -80,7 +93,7 @@
 	 		},
 	 		dataType: 'json',
 	 		success: function (data) {
-				console.log("succccs")
+				console.log(data)
 	 		}
  		});
  	});
@@ -101,6 +114,7 @@
 	 		dataType: 'json',
 	 		success: function (data) {
 				console.log("succccs")
+				console.log(data)
 	 		}
  		});
  	});
@@ -121,6 +135,7 @@
 	 		dataType: 'json',
 	 		success: function (data) {
 				console.log("succccs")
+				console.log(data)
 	 		}
  		});
  	});
