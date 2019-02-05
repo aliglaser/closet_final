@@ -46,6 +46,7 @@
 	var ss_checked = [];
 	var co_checked = [];
 	var pt_checked = [];
+	//dkdkd
 	$("#id_category input:checkbox").change(function () {
  		if(this.checked){
  			cg_checked.push(this.value)
@@ -69,7 +70,7 @@
 				    obj = json_data[i];
 				    console.log(obj)
 				    html += "<img src=";
-				    html += obj["photo"].file.url
+				    html += obj["photo"]
 				    html += "/>";
 			  	}
 				html += "</ul>";
